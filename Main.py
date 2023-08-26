@@ -43,6 +43,10 @@ for i in range(len(dataset['smoker_bool'])):
     if(gender == 'male'):
         dataset.at[i, 'male_bool'] = 1
 
+#Eliminiamo i duplicati
+dataset = dataset.drop_duplicates()
+
+#dataset.head()
 
 X_train, X_test, y_train, y_test = train_test_split(
     dataset.drop(['diabetes', 'smoking_history','gender'], axis=1),
@@ -53,13 +57,16 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 #RandomForest.train_and_test_rfc(X_train, X_test, y_train, y_test)
 
-#Clustering.train_and_test_best_KMeans_model(X_train, y_train)
 
-Knn.train_and_test_knn(X_train, X_test, y_train, y_test)
+Clustering.run_clustering_tests(dataset)
 """
-GNB.TrainAndTestGaussianNB(X_train, X_test, y_train, y_test)
+#Knn.train_and_test_knn(X_train, X_test, y_train, y_test)
 
-MlpNeuralNetwork.TrainAndTestBestMLPC(X_train, X_test, y_train, y_test)
+#GNB.TrainAndTestGaussianNB(X_train, X_test, y_train, y_test)
+
+#Addestriamo il modello senza standard scaler prima, per fare un confronto
+#print("\n\nRisultati MLP senza standardizzazione dati: ")
+#MlpNeuralNetwork.TrainAndTestBestMLPC(X_train, X_test, y_train, y_test)
 
 #Ulteriore preprocessing per massimizzare le performance del mlpc neural network
 scaler = StandardScaler()  
@@ -67,6 +74,9 @@ scaler.fit(X_train)
 X_train = scaler.transform(X_train)  
 X_test = scaler.transform(X_test)  
 
-MlpNeuralNetwork.TestMlpcActivation(X_train, X_test, y_train, y_test)
-MlpNeuralNetwork.TestMlpcLayerSize(X_train, X_test, y_train, y_test)
-MlpNeuralNetwork.TestMlpcSolver(X_train, X_test, y_train, y_test)"""
+#print("\n\nRisultati MLP con standardizzazione dati: ")
+#MlpNeuralNetwork.TrainAndTestBestMLPC(X_train, X_test, y_train, y_test)
+
+#MlpNeuralNetwork.TestMlpcActivation(X_train, X_test, y_train, y_test)
+#MlpNeuralNetwork.TestMlpcLayerSize(X_train, X_test, y_train, y_test)
+#MlpNeuralNetwork.TestMlpcSolver(X_train, X_test, y_train, y_test)"""

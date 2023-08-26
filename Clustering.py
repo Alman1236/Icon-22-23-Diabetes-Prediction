@@ -4,38 +4,60 @@ import numpy as np
 
 from sklearn.metrics import completeness_score, homogeneity_score, silhouette_score, v_measure_score
 
-def find_best_number_of_clusters(X_train):
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+
+def run_clustering_tests(dataset):
+    
+    y = dataset['diabetes']
+
+    encoder = LabelEncoder()
+    dataset['hypertension_encoded'] = encoder.fit_transform(dataset['hypertension'])
+    dataset['heart_disease_encoded'] = encoder.fit_transform(dataset['heart_disease'])
+    dataset = dataset.drop(['heart_disease', 'hypertension','gender', 'smoking_history'], axis =1)
+
+    X = dataset.drop('diabetes', axis=1)
+    scaler = StandardScaler()
+    dataset = scaler.fit_transform(dataset)
+
+    find_best_number_of_clusters(X)
+    train_and_test_best_KMeans_model(dataset, y)
+
+def find_best_number_of_clusters(X):
     inertia = []
     k_values = range(1, 25)
     for k in k_values:
-        kmeans = KMeans(n_clusters=k, random_state=42)
-        kmeans.fit(X_train)
+        kmeans = KMeans(n_clusters=k, random_state=42, n_init='warn')
+        kmeans.fit(X)
         inertia.append(kmeans.inertia_)
 
     # Traccia il grafico dell'inerzia rispetto al numero di cluster
-    plt.plot(k_values, inertia, 'bx-')
+    plt.plot(k_values, inertia)
     plt.title('Metodo del gomito')
     plt.ylabel('Inerzia')
     plt.xlabel('Cluster')
     plt.show()
 
 
-def train_and_test_best_KMeans_model(X_train, y_train):
-    kmeans = KMeans(n_clusters=2, algorithm='full', init='k-means++', max_iter=250,  random_state=42)
-    label = kmeans.fit_predict(X_train)
+def train_and_test_best_KMeans_model(dataset, y):
     
-    kmeans_labels = np.unique(label)
-    X_train = np.array(X_train)
+    kmeans = KMeans(n_clusters=6, random_state=42, init='k-means++', max_iter=250)
+    kmeans.fit(dataset)
+    
+    labels = kmeans.labels_
 
-    plt.figure(figsize=(10, 10))
-    plt.title('Clustering: ')
-    for k in kmeans_labels:
-        plt.scatter(X_train[label == k, 0], X_train[label == k, 1], label=k)
-    plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], s=200, c='k', label='Cluster mean')
-    plt.legend()
+    plt.scatter(dataset[:, 0], dataset[:, 1], c=labels)
+    plt.title('Clustering dati')
     plt.show()
-    plt.close()
 
-    print('\nOmogeneità  : ', homogeneity_score(y_train, kmeans.labels_))
-    print('Completezza : ', completeness_score(y_train, kmeans.labels_))
-    print('V_measure   : ', v_measure_score(y_train, kmeans.labels_))
+    print('\nOmogeneità (k-means++) : ', homogeneity_score(y, labels))
+    print('Misura V  (k-means++) : ', v_measure_score(y, labels))
+    print('Completezza (k-means++): ', completeness_score(y, labels))
+
+    kmeans = KMeans(n_clusters=6, random_state=42, init='random', max_iter=250)
+    kmeans.fit(dataset)
+    
+    labels = kmeans.labels_
+
+    print('\nOmogeneità (random)  : ', homogeneity_score(y, labels))
+    print('Misura V  (random) : ', v_measure_score(y, labels))
+    print('Completezza (random): ', completeness_score(y, labels))
