@@ -2,6 +2,10 @@ import UserInterface
 import pandas as pd
 import RandomForest
 import Clustering
+import Knn
+import MlpNeuralNetwork
+import GNB
+from sklearn.preprocessing import StandardScaler
 
 from sklearn.model_selection import train_test_split
 
@@ -9,22 +13,22 @@ UserInterface.print_title()
 
 dataset = pd.read_csv('dataset.csv')
 
-UserInterface.print_dataset_info(dataset)
+#UserInterface.print_dataset_info(dataset)
 
 diabetic_count = dataset['diabetes'].value_counts()
 
 labels = ['Non diabetici', 'Diabetici']
 values = diabetic_count.values
 colors = ['#16ff00', '#ff0000']
-UserInterface.print_pie_chart(values, labels, colors)
+#UserInterface.print_pie_chart(values, labels, colors)
 
 #Si potrebbe decidere di mostrare quanti degli affetti da malattie cardiache hanno il diabete, in percentuale, con un grafico a torta
 #Lo stesso si potrebbe fare con l'ipertensione
 
 data_for_boxplot = dataset.drop(['gender', 'age', 'smoking_history'], axis=1)
-UserInterface.compare_using_boxplot(title = 'Distribuzione BMI in relazione al diabete', x_label= 'diabetes', y_label='bmi', dataset = data_for_boxplot)
-UserInterface.compare_using_boxplot(title = 'Distribuzione emoglobina glicata in relazione al diabete', x_label= 'diabetes', y_label='HbA1c_level', dataset = data_for_boxplot)
-UserInterface.compare_using_boxplot(title = 'Distribuzione glucosio nel sangue in relazione al diabete', x_label= 'diabetes', y_label='blood_glucose_level', dataset = data_for_boxplot)
+#UserInterface.compare_using_boxplot(title = 'Distribuzione BMI in relazione al diabete', x_label= 'diabetes', y_label='bmi', dataset = data_for_boxplot)
+#UserInterface.compare_using_boxplot(title = 'Distribuzione emoglobina glicata in relazione al diabete', x_label= 'diabetes', y_label='HbA1c_level', dataset = data_for_boxplot)
+#UserInterface.compare_using_boxplot(title = 'Distribuzione glucosio nel sangue in relazione al diabete', x_label= 'diabetes', y_label='blood_glucose_level', dataset = data_for_boxplot)
 
 dataset['smoker_bool'] = 0
 dataset['male_bool'] = 0
@@ -49,4 +53,20 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 #RandomForest.train_and_test_rfc(X_train, X_test, y_train, y_test)
 
-Clustering.train_and_test_best_KMeans_model(X_train, y_train)
+#Clustering.train_and_test_best_KMeans_model(X_train, y_train)
+
+Knn.train_and_test_knn(X_train, X_test, y_train, y_test)
+"""
+GNB.TrainAndTestGaussianNB(X_train, X_test, y_train, y_test)
+
+MlpNeuralNetwork.TrainAndTestBestMLPC(X_train, X_test, y_train, y_test)
+
+#Ulteriore preprocessing per massimizzare le performance del mlpc neural network
+scaler = StandardScaler()  
+scaler.fit(X_train)  
+X_train = scaler.transform(X_train)  
+X_test = scaler.transform(X_test)  
+
+MlpNeuralNetwork.TestMlpcActivation(X_train, X_test, y_train, y_test)
+MlpNeuralNetwork.TestMlpcLayerSize(X_train, X_test, y_train, y_test)
+MlpNeuralNetwork.TestMlpcSolver(X_train, X_test, y_train, y_test)"""

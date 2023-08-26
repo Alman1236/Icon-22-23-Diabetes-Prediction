@@ -14,9 +14,9 @@ def find_best_number_of_clusters(X_train):
 
     # Traccia il grafico dell'inerzia rispetto al numero di cluster
     plt.plot(k_values, inertia, 'bx-')
-    plt.xlabel('Numero di cluster')
-    plt.ylabel('Inerzia')
     plt.title('Metodo del gomito')
+    plt.ylabel('Inerzia')
+    plt.xlabel('Cluster')
     plt.show()
 
 
