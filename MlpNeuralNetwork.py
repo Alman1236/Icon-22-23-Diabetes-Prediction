@@ -1,6 +1,7 @@
 import time
 
 from sklearn.neural_network import MLPClassifier #multilayer perceptron 
+from sklearn.preprocessing import StandardScaler
 
 from sklearn.metrics import (
     accuracy_score,
@@ -10,7 +11,20 @@ from sklearn.metrics import (
 
 import matplotlib.pyplot as plt
 
-def TestMlpcLayerSize(X_train, X_test, y_train,  y_test):
+def run_mlpc_tests(X_train, X_test, y_train,  y_test):
+    scaler = StandardScaler()  
+    scaler.fit(X_train)  
+    X_train = scaler.transform(X_train)  
+    X_test = scaler.transform(X_test)  
+
+    print("\n\nRisultati MLP con standardizzazione dati: ")
+    MlpNeuralNetwork.train_and_test_best_mlpc(X_train, X_test, y_train, y_test)
+
+    MlpNeuralNetwork.test_mlpc_activation(X_train, X_test, y_train, y_test)
+    MlpNeuralNetwork.test_mlpc_layer_size(X_train, X_test, y_train, y_test)
+    MlpNeuralNetwork.test_mlpc_solver(X_train, X_test, y_train, y_test)
+
+def test_mlpc_layer_size(X_train, X_test, y_train,  y_test):
 
     sample_train_precision_score = []
     sample_test_precision_score = []
@@ -56,7 +70,7 @@ def TestMlpcLayerSize(X_train, X_test, y_train,  y_test):
     plt.ylim(0.7, 1.0)
     plt.show()
 
-def TestMlpcSolver(X_train, X_test, y_train,  y_test):
+def test_mlpc_solver(X_train, X_test, y_train,  y_test):
 
     possible_solvers = ['adam', 'lbfgs', 'sgd']
     sample_test_precision_score = []
@@ -89,7 +103,7 @@ def TestMlpcSolver(X_train, X_test, y_train,  y_test):
     plt.ylabel('Precisione')
     plt.show()
 
-def TestMlpcActivation(X_train, X_test, y_train,  y_test):
+def test_mlpc_activation(X_train, X_test, y_train,  y_test):
 
     possible_activations = ['identity', 'logistic', 'relu', 'tanh']
     sample_test_precision_score = []
@@ -122,7 +136,7 @@ def TestMlpcActivation(X_train, X_test, y_train,  y_test):
     plt.ylim(0.7, 1.0)
     plt.show()
 
-def TrainAndTestBestMLPC(X_train, X_test, y_train,  y_test):
+def train_and_test_best_mlpc(X_train, X_test, y_train,  y_test):
     start = time.time()
 
     mlpc = MLPClassifier(hidden_layer_sizes=(6,6,6), solver='lbfgs', activation='relu', max_iter=500)

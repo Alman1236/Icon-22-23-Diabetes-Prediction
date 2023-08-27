@@ -8,13 +8,13 @@ from sklearn.metrics import (
     precision_score,
 )
 
-def TrainAndTestGaussianNB(X_train_images, y_train, X_test_images, y_test):
+def TrainAndTestGaussianNB(X_train, X_test, y_train,  y_test):
     
     start = time.time()
     
     NaiveBayes = GaussianNB()
-    NaiveBayes.fit(X_train_images, y_train)
-    y_pred_NaiveBayes = NaiveBayes.predict(X_test_images)
+    NaiveBayes.fit(X_train, y_train)
+    y_pred_NaiveBayes = NaiveBayes.predict(X_test)
     
     end = time.time() 
 

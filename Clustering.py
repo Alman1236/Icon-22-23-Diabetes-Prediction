@@ -1,8 +1,7 @@
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
-import numpy as np
 
-from sklearn.metrics import completeness_score, homogeneity_score, silhouette_score, v_measure_score
+from sklearn.metrics import completeness_score, v_measure_score, homogeneity_score
 
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
@@ -40,7 +39,7 @@ def find_best_number_of_clusters(X):
 
 def train_and_test_best_KMeans_model(dataset, y):
     
-    kmeans = KMeans(n_clusters=6, random_state=42, init='k-means++', max_iter=250)
+    kmeans = KMeans(n_clusters=2, random_state=42, init='k-means++', max_iter=250)
     kmeans.fit(dataset)
     
     labels = kmeans.labels_
@@ -50,14 +49,14 @@ def train_and_test_best_KMeans_model(dataset, y):
     plt.show()
 
     print('\nOmogeneità (k-means++) : ', homogeneity_score(y, labels))
-    print('Misura V  (k-means++) : ', v_measure_score(y, labels))
     print('Completezza (k-means++): ', completeness_score(y, labels))
+    print('Misura V  (k-means++) : ', v_measure_score(y, labels))
 
-    kmeans = KMeans(n_clusters=6, random_state=42, init='random', max_iter=250)
+    kmeans = KMeans(n_clusters=2, random_state=42, init='random', max_iter=250)
     kmeans.fit(dataset)
     
     labels = kmeans.labels_
 
     print('\nOmogeneità (random)  : ', homogeneity_score(y, labels))
-    print('Misura V  (random) : ', v_measure_score(y, labels))
     print('Completezza (random): ', completeness_score(y, labels))
+    print('Misura V  (random) : ', v_measure_score(y, labels))
